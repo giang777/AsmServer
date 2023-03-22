@@ -26,7 +26,7 @@ let tbodyProduct = document.getElementById('table_product');
 function getDataUser() {
     let dataTableUser = "";
     let i = 1;
-    arrUser.forEach((value) => {
+    arrUser.forEach((value, index) => {
         dataTableUser += `<tr>
             <td>${i}</td>
             <td>${value.id}</td>
@@ -35,8 +35,8 @@ function getDataUser() {
             <td>${value.user}</td>
             <td>${value.password}</td>
             <td>
-            <button type="button" class="btn btn-danger">Xóa</button>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal_Edit_User">Sửa</button>
+            <button type="button" class="btn btn-danger" onclick="deleteUser(${Number(index)})">Xóa</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal_Edit_User" onclick="editUser(${Number(index)})">Sửa</button>
             </td>
         </tr>`;
         i++;
@@ -48,7 +48,7 @@ function getDataProDuct() {
     let dataTableProduct = "";
     let j = 1;
 
-    arrProduct.forEach((value) => {
+    arrProduct.forEach((value,index) => {
         dataTableProduct += `<tr>
             <td>${j}</td>
             <td>${value.id}</td>
@@ -57,18 +57,345 @@ function getDataProDuct() {
             <td>${value.price}</td>
             <td>${value.color}</td>
             <td>
-            <button type="button" class="btn btn-danger">Xóa</button>
-            <button type="button" class="btn btn-success">Sửa</button>
+            <button type="button" class="btn btn-danger" onclick="deleteProduct(${Number(index)})">Xóa</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal_Product_Edit" onclick="editProduct(${Number(index)})">Sửa</button>
             </td>
         </tr>`;
         j++;
     });
 
-    tbodyProduct.innerHTML = dataTableProduct
+    tbodyProduct.innerHTML = dataTableProduct;
 }
 
 getDataUser();
 getDataProDuct();
+
+const addUser = () => {
+    let id = new Date().getTime();
+    let name = document.getElementById("nameUser");
+    let username = document.getElementById("userName");
+    let password = document.getElementById('pwd');
+    let password2 = document.getElementById('pwd2');
+    let img = document.getElementById('imgUser');
+    let textErr = document.getElementsByClassName('textErrAdd');
+    let check = true;
+
+    if (name.value == '') {
+        textErr[0].innerHTML = 'Không được để chống tên';
+        textErr[0].style.color = 'red';
+        check = false;
+    } else {
+        textErr[0].innerHTML = 'Tên hợp lệ';
+        textErr[0].style.color = 'green';
+    }
+
+    if (username.value == '') {
+        textErr[1].innerHTML = 'Không được để chống tài khoản';
+        textErr[1].style.color = 'red';
+        check = false;
+    } else {
+        let xet = true;
+        arrUser.forEach((value) => {
+            if (value.user == username.value) {
+                xet = false;
+            }
+        })
+        if (xet) {
+            textErr[1].innerHTML = 'Tài khoản hợp lệ';
+            textErr[1].style.color = 'green';
+        } else {
+            textErr[1].innerHTML = 'Tài khoản đã tồn tại ';
+            textErr[1].style.color = 'red';
+            check = false;
+        }
+    }
+
+    if (password.value == '') {
+        textErr[2].innerHTML = 'Không được để chống mật khẩu';
+        textErr[2].style.color = 'red';
+        check = false;
+    } else {
+        textErr[2].innerHTML = 'Mật khẩu hợp lệ';
+        textErr[2].style.color = 'green';
+    }
+
+    if (password2.value == '') {
+        textErr[3].innerHTML = 'Không được để chống mật khẩu';
+        textErr[3].style.color = 'red';
+        check = false;
+    } else {
+        if (password2.value == password.value) {
+            textErr[3].innerHTML = 'Mật khẩu khớp';
+            textErr[3].style.color = 'green';
+        } else {
+            textErr[3].innerHTML = 'Mật khẩu không khớp';
+            textErr[3].style.color = 'red';
+            check = false;
+        }
+
+    }
+
+    if (img.value == '') {
+        textErr[4].innerHTML = 'Không được để chống link ảnh';
+        textErr[4].style.color = 'red';
+        check = false;
+    } else {
+        textErr[4].innerHTML = 'Mật khẩu hợp lệ';
+        textErr[4].style.color = 'green';
+    }
+
+
+    if (check) {
+        let user = { id: id, name: name.value, user: username.value, password: password.value, img: img.value }
+        arrUser.push(user);
+        setTimeout(() => {
+            alert("Thêm thành công");
+            getDataUser();
+        }, 1000)
+
+    }
+
+}
+
+const deleteUser = (index) => {
+
+    console.log(index)
+    arrUser.splice(Number(index), 1);
+    alert("Xóa thành công !")
+    getDataUser();
+    console.log(arrUser);
+
+}
+
+const editUser = (index) => {
+    let name = document.getElementById("nameUserEdit");
+    let password = document.getElementById('pwdEdit');
+    let password2 = document.getElementById('pwd2Edit');
+    let img = document.getElementById('imgUserEdit');
+    let textErr = document.getElementsByClassName('textErrEdit');
+    let btn = document.getElementById("btn_editUser")
+    let check = true;
+
+    name.value = arrUser[index].name;
+    password.value = arrUser[index].password;
+    password2.value =  arrUser[index].password;
+    img.value = arrUser[index].img;
+
+    if (name.value == '') {
+        textErr[0].innerHTML = 'Không được để chống tên';
+        textErr[0].style.color = 'red';
+        check = false;
+    } else {
+        textErr[0].innerHTML = 'Tên hợp lệ';
+        textErr[0].style.color = 'green';
+    }
+
+
+    if (password.value == '') {
+        textErr[1].innerHTML = 'Không được để chống mật khẩu';
+        textErr[1].style.color = 'red';
+        check = false;
+    } else {
+        textErr[1].innerHTML = 'Mật khẩu hợp lệ';
+        textErr[1].style.color = 'green';
+    }
+
+    if (password2.value == '') {
+        textErr[2].innerHTML = 'Không được để chống mật khẩu';
+        textErr[2].style.color = 'red';
+        check = false;
+    } else {
+        if (password2.value == password.value) {
+            textErr[2].innerHTML = 'Mật khẩu khớp';
+            textErr[2].style.color = 'green';
+        } else {
+            textErr[2].innerHTML = 'Mật khẩu không khớp';
+            textErr[2].style.color = 'red';
+            check = false;
+        }
+
+    }
+
+    if (img.value == '') {
+        textErr[3].innerHTML = 'Không được để chống link ảnh';
+        textErr[3].style.color = 'red';
+        check = false;
+    } else {
+        textErr[3].innerHTML = 'Mật khẩu hợp lệ';
+        textErr[3].style.color = 'green';
+    }
+
+
+
+    btn.onclick = ()=>{
+        if (check) {
+            arrUser[index].name = String(name.value);
+            arrUser[index].password = String(password.value);
+            arrUser[index].img = String(img.value);
+            
+            setTimeout(() => {
+                alert("Sửa thành công");
+                getDataUser();
+            }, 1000)
+    
+        }
+    }
+
+}
+
+const addProduct = () => {
+    let id = new Date().getTime();
+    let name = document.getElementById("nameProduct");
+    let price = document.getElementById("priceProduct");
+    let colorArr = document.getElementById("select_addProduct");
+    let color = colorArr.options[colorArr.selectedIndex].value;
+    let img = document.getElementById('imgProduct');
+    let textErr = document.getElementsByClassName('textErrAddProduct');
+    let check = true;
+    console.log(color);
+    if (name.value == '') {
+        textErr[0].innerHTML = 'Không được để chống tên';
+        textErr[0].style.color = 'red';
+        check = false;
+    } else {
+        textErr[0].innerHTML = 'Tên hợp lệ';
+        textErr[0].style.color = 'green';
+    }
+
+    if (price.value == '') {
+        textErr[1].innerHTML = 'Không được để chống tài khoản';
+        textErr[1].style.color = 'red';
+        check = false;
+    } else {
+        if (Number(price.value) <= 0) {
+            textErr[1].innerHTML = 'Giá không hợp lệ';
+            textErr[1].style.color = 'red';
+            check = false;
+        } else {
+            textErr[1].innerHTML = 'Giá hợp lệ ';
+            textErr[1].style.color = 'green';
+        }
+    }
+
+    if (color == 'Null') {
+        textErr[2].innerHTML = 'Không được để chống màu';
+        textErr[2].style.color = 'red';
+        check = false;
+    } else {
+        textErr[2].innerHTML = 'Màu hợp lệ';
+        textErr[2].style.color = 'green';
+    }
+
+    
+    if (img.value == '') {
+        textErr[3].innerHTML = 'Không được để chống link ảnh';
+        textErr[3].style.color = 'red';
+        check = false;
+    } else {
+        textErr[3].innerHTML = 'Mật khẩu hợp lệ';
+        textErr[3].style.color = 'green';
+    }
+
+
+    if (check) {
+        let products = { id: id, name: name.value, price: price.value, color: color, img: img.value }
+        arrProduct.push(products);
+        setTimeout(() => {
+            alert("Thêm thành công");
+            getDataProDuct();
+        }, 1000)
+
+    }
+
+}
+
+const deleteProduct = (index) => {
+
+    console.log(index)
+    arrProduct.splice(Number(index), 1);
+    alert("Xóa thành công !")
+    getDataProDuct();
+    
+}
+
+const editProduct  = (index) => {
+    let name = document.getElementById("nameProductEdit");
+    let price = document.getElementById("priceProductEdit");
+    let colorArr = document.getElementById("edit_colorProduct");
+    let color = colorArr.options[colorArr.selectedIndex];
+    console.log(color);
+   
+    let img = document.getElementById('imgProductEdit');
+    let textErr = document.getElementsByClassName('textErrEditProduct');
+    let btn_edit = document.getElementById("btn_editProduct");
+    let check = true;
+
+    name.value = arrProduct[index].name;
+    price.value = arrProduct[index].price;
+    img.value = arrProduct[index].img;
+
+    console.log(color);
+    if (name.value == '') {
+        textErr[0].innerHTML = 'Không được để chống tên';
+        textErr[0].style.color = 'red';
+        check = false;
+    } else {
+        textErr[0].innerHTML = 'Tên hợp lệ';
+        textErr[0].style.color = 'green';
+    }
+
+    if (price.value == '') {
+        textErr[1].innerHTML = 'Không được để chống tài khoản';
+        textErr[1].style.color = 'red';
+        check = false;
+    } else {
+        if (Number(price.value) <= 0) {
+            textErr[1].innerHTML = 'Giá không hợp lệ';
+            textErr[1].style.color = 'red';
+            check = false;
+        } else {
+            textErr[1].innerHTML = 'Giá hợp lệ ';
+            textErr[1].style.color = 'green';
+        }
+    }
+
+    // if (color.text == 'Null') {
+    //     textErr[2].innerHTML = 'Không được để chống màu';
+    //     textErr[2].style.color = 'red';
+    //     check = false;
+    // } else {
+    //     textErr[2].innerHTML = 'Màu hợp lệ';
+    //     textErr[2].style.color = 'green';
+    // }
+
+    if (img.value == '') {
+        textErr[3].innerHTML = 'Không được để chống link ảnh';
+        textErr[3].style.color = 'red';
+        check = false;
+    } else {
+        textErr[3].innerHTML = 'Mật khẩu hợp lệ';
+        textErr[3].style.color = 'green';
+    }
+
+    btn_edit.addEventListener('click',()=>{
+        console.log(color);
+        if (check) {
+            arrProduct[index].name = String(name.value);
+            arrProduct[index].price = String(price.value);
+            arrProduct[index].color = String(color.value);
+            arrProduct[index].img = String(img.value);
+
+            setTimeout(() => {
+                alert("Sửa thành công");
+                getDataProDuct();
+            }, 1000)
+    
+        }
+    })
+
+
+}
+
 
 
 

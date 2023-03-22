@@ -73,27 +73,37 @@
 
                             <!-- Modal body -->
                             <div class="modal-body">
-                                <form action="/home#" method="POST">
+                                <form action="/home#" method="POST" onsubmit="return false">
                                     <div class="form-group">
-                                        <label for="email">Email:</label>
-                                        <input type="email" class="form-control" placeholder="Nhập email" id="email">
+                                        <label for="email">Tên đăng nhập:</label>
+                                        <input type="text" class="form-control" placeholder="Nhập tên" id="nameUser">
+                                        <p class="textErrAdd"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Tài khoản:</label>
+                                        <input type="text" class="form-control" placeholder="Nhập tài khoản"
+                                            id="userName">
+                                        <p class="textErrAdd"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="pwd">Mật khẩu:</label>
                                         <input type="password" class="form-control" placeholder="Nhập mật khẩu"
                                             id="pwd">
+                                        <p class="textErrAdd"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="pwd">Nhập lại Mật khẩu:</label>
                                         <input type="password" class="form-control" placeholder="Nhập lại mật khẩu"
                                             id="pwd2">
+                                        <p class="textErrAdd"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="pwd">Nhập link ảnh:</label>
-                                        <input type="password" class="form-control" placeholder="Nhập link ảnh"
-                                            id="pwd2">
+                                        <input type="text" class="form-control" placeholder="Nhập link ảnh"
+                                            id="imgUser">
+                                        <p class="textErrAdd"></p>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Thêm</button>
+                                    <button type="submit" class="btn btn-primary" onclick="addUser()">Thêm</button>
 
                                 </form>
                             </div>
@@ -127,33 +137,38 @@
 
                             <!-- Modal Header -->
                             <div class="modal-header">
-                                <h4 class="modal-title">Thêm tài khoản</h4>
+                                <h4 class="modal-title">Sửa tài khoản</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
 
                             <!-- Modal body -->
                             <div class="modal-body">
-                                <form action="/home#" method="POST">
+                                <form action="/home#" method="POST" onsubmit="return false">
                                     <div class="form-group">
-                                        <label for="email">Email:</label>
-                                        <input type="email" class="form-control" placeholder="Nhập email" id="email">
+                                        <label for="email">Tên đăng nhập:</label>
+                                        <input type="text" class="form-control" placeholder="Nhập tên"
+                                            id="nameUserEdit">
+                                        <p class="textErrEdit"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="pwd">Mật khẩu:</label>
-                                        <input type="password" class="form-control" placeholder="Nhập mật khẩu"
-                                            id="pwd">
+                                        <input type="text" class="form-control" placeholder="Nhập mật khẩu"
+                                            id="pwdEdit">
+                                        <p class="textErrEdit"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="pwd">Nhập lại Mật khẩu:</label>
-                                        <input type="password" class="form-control" placeholder="Nhập lại mật khẩu"
-                                            id="pwd2">
+                                        <input type="text" class="form-control" placeholder="Nhập lại mật khẩu"
+                                            id="pwd2Edit">
+                                        <p class="textErrEdit"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="pwd">Nhập link ảnh:</label>
-                                        <input type="password" class="form-control" placeholder="Nhập link ảnh"
-                                            id="pwd2">
+                                        <input type="text" class="form-control" placeholder="Nhập link ảnh"
+                                            id="imgUserEdit">
+                                        <p class="textErrEdit"></p>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Thêm</button>
+                                    <button type="submit" class="btn btn-primary" id="btn_editUser">Sửa</button>
 
                                 </form>
                             </div>
@@ -187,27 +202,37 @@
 
                             <!-- Modal body -->
                             <div class="modal-body">
-                                <form action="/home">
+                                <form action="/home" onsubmit="return false">
                                     <div class="form-group">
-                                        <label for="email">Email:</label>
-                                        <input type="email" class="form-control" placeholder="Nhập email" id="email">
+                                        <label for="email">Tên sản phẩm:</label>
+                                        <input type="text" class="form-control" placeholder="Nhập tên sản phẩm"
+                                            id="nameProduct">
+                                        <p class="textErrAddProduct"></p>
                                     </div>
                                     <div class="form-group">
-                                        <label for="pwd">Mật khẩu:</label>
-                                        <input type="password" class="form-control" placeholder="Nhập mật khẩu"
-                                            id="pwd">
+                                        <label for="pwd">Giá sản phẩm:</label>
+                                        <input type="number" class="form-control" placeholder="Nhập mật khẩu"
+                                            id="priceProduct">
+                                        <p class="textErrAddProduct"></p>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="pwd">Nhập lại Mật khẩu:</label>
-                                        <input type="password" class="form-control" placeholder="Nhập lại mật khẩu"
-                                            id="pwd2">
-                                    </div>
+                                    <select class="form-select form-select-sm"
+                                        aria-label=".form-select-lg example" id="select_addProduct">
+                                        <option selected value="Null">Chọn màu</option>
+                                        <option value="Đỏ">Đỏ</option>
+                                        <option value="Xanh lục">Xanh lục</option>
+                                        <option value="Xanh">Xanh</option>
+                                        <option value="Vàng">Vàng</option>
+                                        <option value="Xám">Xám</option>
+                                    </select>
+                                    <p class="textErrAddProduct"></p>
                                     <div class="form-group">
                                         <label for="pwd">Nhập link ảnh:</label>
-                                        <input type="password" class="form-control" placeholder="Nhập link ảnh"
-                                            id="pwd2">
+                                        <input type="text" class="form-control" placeholder="Nhập link ảnh"
+                                            id="imgProduct">
+                                     <p class="textErrAddProduct"></p>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Thêm</button>
+                                   
+                                    <button type="submit" class="btn btn-primary" onclick="addProduct()">Thêm</button>
 
                                 </form>
                             </div>
@@ -235,6 +260,59 @@
 
                     </tbody>
                 </table>
+                <div class="modal" id="myModal_Product_Edit">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Sửa sản phẩm</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form action="/home" onsubmit="return false">
+                                    <div class="form-group">
+                                        <label for="email">Tên sản phẩm:</label>
+                                        <input type="text" class="form-control" placeholder="Nhập tên sản phẩm"
+                                            id="nameProductEdit">
+                                             <p class="textErrEditProduct"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Giá sản phẩm:</label>
+                                        <input type="number" class="form-control" placeholder="Nhập giá"
+                                            id="priceProductEdit">
+                                             <p class="textErrEditProduct"></p>
+                                    </div>
+                                       <select class="form-select form-select-sm"
+                                        aria-label=".form-select-lg example" id="edit_colorProduct">
+                                        <option selected value="Null">Chọn màu</option>
+                                        <option value="Đỏ">Đỏ</option>
+                                        <option value="Xanh lục">Xanh lục</option>
+                                        <option value="Xanh">Xanh</option>
+                                        <option value="Vàng">Vàng</option>
+                                        <option value="Xám">Xám</option>
+                                    </select>
+                                    <p class="textErrEditProduct"></p>
+                                    <div class="form-group">
+                                        <label for="pwd">Nhập link ảnh:</label>
+                                        <input type="text" class="form-control" placeholder="Nhập link ảnh"
+                                            id="imgProductEdit">
+                                            <p class="textErrEditProduct"></p>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" id="btn_editProduct" >Sửa</button>
+
+                                </form>
+                            </div>
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="menu3" class="container tab-pane fade"><br>
                 <h3>Menu 3</h3>
