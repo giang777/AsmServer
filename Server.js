@@ -87,6 +87,6 @@ app.get('/statistical',(req,res)=>{
 });
 app.post('/statistical',(req,res)=>{
     res.render('Statistical',{
-        layout : 'main',
+        layout : 'main'
     });
 });
