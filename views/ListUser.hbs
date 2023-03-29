@@ -1,23 +1,65 @@
 <div class="container">
   <!-- Content here -->
-     <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link " href="/home">Trang chủ</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="/userManager">Quản lý tài khoản</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/productManager">Quản lý hàng hóa</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Đơn hàng</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Thống kê</a>
-            </li>
-        </ul>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link " href="/home">Trang chủ</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/userManager">Quản lý tài khoản</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/productManager">Quản lý hàng hóa</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/order">Đơn hàng</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/statistical">Thống kê</a>
+    </li>
+  </ul>
   <h1>Danh sách tài khoản</h1>
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal"
+    style="margin-bottom: 20px;">Thêm tài khoản</button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Thêm sản phẩm</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        </div>
+        <div class="modal-body">
+
+          <form action="/userManager" method="POST" enctype="multipart/form-data" onsubmit="return false" id="addUser">
+            <div class="form-group">
+              <label for="usr">Họ và tên</label>
+              <input type="text" class="form-control" id="fullname" name="fullname">
+            </div>
+            <div class="form-group">
+              <label for="pwd">Email:</label>
+              <input type="text" class="form-control" id="email" name="email">
+            </div>
+            <div class="form-group">
+              <label for="pwd">Mật khẩu:</label>
+              <input type="text" class="form-control" id="pass" name="pass">
+            </div>
+            <div class="form-group">
+              <label for="formFile" class="form-label">Ảnh : </label>
+              <input class="form-control" type="file" id="files" name="img" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-info btn-lg"
+              style="margin-bottom: 20px;">Thêm tài khoản</button>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <table class="table table-condensed">
     <thead>
       <tr>
@@ -30,16 +72,20 @@
     </thead>
     <tbody>
       {{#each data}}
-        <tr>
-          <td>{{this._id}}</td>
-          <td>{{this.name}}</td>
-          <td><img src={{this.img}} alt="" width="80" height="80"></td>
-          <td>{{this.email}}</td>
-          <td>{{this.password}}</td>
-          <td><button type="button" class="btn btn-danger">Xóa</button></td>
-          <td><button type="button" class="btn btn-success">Sửa</button></td>
-        </tr>
+      <tr>
+        <td>{{this._id}}</td>
+        <td>{{this.name}}</td>
+        <td><img src={{this.img}} alt="" width="80" height="80"></td>
+        <td>{{this.email}}</td>
+        <td>{{this.password}}</td>
+        <td><button type="button" class="btn btn-danger">Xóa</button></td>
+        <td><button type="button" class="btn btn-success">Sửa</button></td>
+      </tr>
       {{/each}}
     </tbody>
   </table>
 </div>
+<script src="js/AddUser.js">
+
+
+</script>

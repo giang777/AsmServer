@@ -11,6 +11,7 @@ const Poem = new mongoose.Schema({
         type: String,
     },
     img: {
+        data:Buffer,
         type: String,
     },
 })
