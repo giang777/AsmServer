@@ -1,6 +1,7 @@
 const express = require('express');
 const express_handlebars = require('express-handlebars');
-const multer = require("multer");
+const upload = require("express-fileupload")
+//const multer = require("multer");
 const mongoose = require('mongoose');
 const fs = require('fs');
 const axios = require('axios');
@@ -12,7 +13,7 @@ app.listen(3000, (err) => {
     console.log("Server đang chạy 3000 ");
 });
 
-
+app.use(upload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -21,15 +22,15 @@ app.engine('.hbs', express_handlebars.engine({ defaultLayout: 'main', extname: '
 app.set('view engine', '.hbs');
 app.set('views', './views');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'D:/Server/data_img/user/')
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname);
-    }
-  })
-const upload = multer({ storage: storage })
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, 'D:/Server/data_img/user/')
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.originalname);
+//     }
+//   })
+// const upload = multer({ storage: storage })
 
 app.get('/', async (req, res) => {
     await mongoose.connect(uri);
@@ -60,27 +61,24 @@ app.get('/userManager', async (req, res) => {
         data: userList,
     });
 });
-app.post('/userManager',upload.single("img"), async (req, res) => {
+//,upload.single("img")
+app.post('/userManager', async (req, res) => {
 
     let name = req.body.fullname;
     let email = req.body.email;
     let pass = req.body.pass;
-    let img = req.file;
-    console.log(img);
-    let check = false;
+    let img = req.files.img;
+    // console.log(img);
+    // let check = false;
     
-    let path = img.path;
-
     let pathImg = "",
         dataImg = "",
         file_ext = "",
         imgBase64  = "";
 
-
-    pathImg = fs.readFileSync(path);
-    console.log(pathImg);
+    pathImg = img.data;
     dataImg = pathImg.toString('base64');
-    file_ext = path.substring(path.lastIndexOf('.') + 1);
+    file_ext = img.name.substring(img.name.lastIndexOf('.') + 1);
     imgBase64 = `data:image/${file_ext};base64,${dataImg}`;
     
     let addUser = new userManager({
