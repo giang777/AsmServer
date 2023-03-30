@@ -15,4 +15,4 @@ const Poem = new mongoose.Schema({
         type: String,
     },
 })
-module.exports = mongoose.model('users', Poem);
+module.exports = mongoose.model('user', Poem);
