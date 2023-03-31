@@ -8,6 +8,7 @@ const axios = require('axios');
 const app = express();
 const uri = "mongodb+srv://cucosieu:B8tA6vWuFhVuO60y@cluster0.jnksopi.mongodb.net/SimpleServer?retryWrites=true&w=majority";
 const userManager = require("./public/js/User");
+const e = require('express');
 
 app.listen(3000, (err) => {
     console.log("Server đang chạy 3000 ");
@@ -33,7 +34,10 @@ app.set('views', './views');
 // const upload = multer({ storage: storage })
 
 app.get('/', async (req, res) => {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      });
     res.render('index', {
         layout: 'Login',
     });
@@ -53,7 +57,10 @@ app.post('/home', (req, res) => {
 
 
 app.get('/userManager', async (req, res) => {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      });
     let userList = await userManager.find().lean();
 
     res.render('ListUser', {
@@ -63,6 +70,11 @@ app.get('/userManager', async (req, res) => {
 });
 //,upload.single("img")
 app.post('/userManager', async (req, res) => {
+    await mongoose.connect(uri,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      });
+    let userList = await userManager.find().lean();
 
     let name = req.body.fullname;
     let email = req.body.email;
@@ -70,33 +82,51 @@ app.post('/userManager', async (req, res) => {
     let img = req.files.img;
     // console.log(img);
     // let check = false;
-    
-    let pathImg = "",
-        dataImg = "",
-        file_ext = "",
-        imgBase64  = "";
 
-    pathImg = img.data;
-    dataImg = pathImg.toString('base64');
-    file_ext = img.name.substring(img.name.lastIndexOf('.') + 1);
-    imgBase64 = `data:image/${file_ext};base64,${dataImg}`;
-    
-    let addUser = new userManager({
-        name:name,
-        email:email,
-        password:pass,
-        img:imgBase64,
+    let check = true;
+    let textErr = "";
+    await userList.forEach((value) => {
+        if (value.email == email) {
+            check = false;
+        }
     })
 
-    await addUser.save();
-    await mongoose.connect(uri);
-    let userList = await userManager.find().lean();
+    if (check) {
+        let pathImg = "",
+            dataImg = "",
+            file_ext = "",
+            imgBase64 = "";
 
-    res.render('ListUser', {
-        layout: 'main',
-        data: userList,
-    });
+        pathImg = img.data;
+        dataImg = pathImg.toString('base64');
+        file_ext = img.name.substring(img.name.lastIndexOf('.') + 1);
+        imgBase64 = `data:image/${file_ext};base64,${dataImg}`;
+
+        let addUser = new userManager({
+            name: name,
+            email: email,
+            password: pass,
+            img: imgBase64,
+        })
+
+        await addUser.save();
+        res.redirect("/userManager");
+        
+    }else{
+        res.send('<script>alert("Tài khoản đã tồn tại!"); window.location.href = "/userManager";</script>');
+    }
 });
+app.post("/deleteUser/:id",async (req,res)=>{
+    await mongoose.connect(uri,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      });
+    let id = req.params.id;
+    console.log(id);
+    //await userManager.deleteOne({_id:id});
+
+    res.redirect("/userManager");
+})
 
 
 

@@ -20,7 +20,7 @@
   <h1>Danh sách tài khoản</h1>
   <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal"
     style="margin-bottom: 20px;">Thêm tài khoản</button>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -32,29 +32,29 @@
         </div>
         <div class="modal-body">
 
-          <form action="/userManager" method="POST" enctype="multipart/form-data"  id="addUser">
+          <form action="/userManager" method="POST" enctype="multipart/form-data" id="addUser">
             <div class="form-group">
               <label for="usr">Họ và tên</label>
               <input type="text" class="form-control" id="fullname" name="fullname" required>
             </div>
-            <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
+
             <div class="form-group">
               <label for="pwd">Email:</label>
               <input type="email" class="form-control" id="email" name="email" required>
             </div>
-             <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
+
             <div class="form-group">
               <label for="pwd">Mật khẩu:</label>
               <input type="password" class="form-control" id="pass" name="pass" required>
             </div>
-             <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
+
             <div class="form-group">
               <label for="formFile" class="form-label">Ảnh : </label>
               <input class="form-control" type="file" id="files" name="img" accept="image/*" required>
             </div>
-             <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
-            <button type="submit" class="btn btn-info btn-lg"
-              style="margin-bottom: 20px;" onclick="">Thêm tài khoản</button>
+            <p style="color: red;">{{ textRrr}}</p>
+            <button type="submit" class="btn btn-info btn-lg" style="margin-bottom: 20px;" onclick="">Thêm tài
+              khoản</button>
           </form>
 
         </div>
@@ -82,14 +82,86 @@
         <td><img src={{this.img}} alt="" width="80" height="80"></td>
         <td>{{this.email}}</td>
         <td>{{this.password}}</td>
-        <td><button type="button" class="btn btn-danger">Xóa</button></td>
-        <td><button type="button" class="btn btn-success">Sửa</button></td>
+        <td class="row">
+          <div class="col-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#delete{{this._id}}">
+              delete
+            </button>
+            <div class="modal fade" id="delete{{this._id}}" tabindex="-1" aria-labelledby="delete{{this._id}}"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="delete{{this._id}}">Thông báo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    Bạn có muốn xóa không ?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <form action="/delete" method="post">
+                      <input type="hidden" value={{this._id}} name="id">
+                      <button type="submit" class="btn btn-primary">Yes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit{{this._id}}">
+              edit
+            </button>
+            <div class="modal fade" id="edit{{this._id}}" tabindex="-1" aria-labelledby="edit{{this._id}}"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="edit{{this._id}}">Edit product?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Do you want edit this product?</p>
+                    <form action="/edit" method="post">
+                      <div class="mb-3">
+                        <label for="name" class="form-label">Enter name product</label>
+                        <input value={{this.name}} name="name" type="text" class="form-control" id="name"
+                          placeholder="Enter name product">
+                      </div>
+                      <div class="mb-3">
+                        <label for="color" class="form-label">Enter quantity product</label>
+                        <input value={{this.quantity}} name="color" type="text" class="form-control" id="color"
+                          placeholder="Enter quantity product">
+                      </div>
+                      <div class="mb-3">
+                        <label for="price" class="form-label">Enter price product</label>
+                        <input value={{this.price}} name="price" type="text" class="form-control" id="price"
+                          placeholder="Enter price product">
+                      </div>
+                      <input type="hidden" value={{this._id}} name="id">
+                      <button type="submit" class="btn btn-primary">Yes</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
       </tr>
       {{/each}}
     </tbody>
   </table>
+
 </div>
-<script src="js/AddUser.js">
-
-
+<script>
+  function getId() {
+    let btn_delete = document.getElementById('btn_deleteUser');
+    let btn_delete2 = document.getElementById('btn_delete');
+    btn_delete2.value = btn_delete.value;
+    console.log(btn_delete2.value);
+  }
 </script>
