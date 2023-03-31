@@ -34,10 +34,10 @@ app.set('views', './views');
 // const upload = multer({ storage: storage })
 
 app.get('/', async (req, res) => {
-    await mongoose.connect(uri,{
+    await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-      });
+    });
     res.render('index', {
         layout: 'Login',
     });
@@ -57,10 +57,10 @@ app.post('/home', (req, res) => {
 
 
 app.get('/userManager', async (req, res) => {
-    await mongoose.connect(uri,{
+    await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-      });
+    });
     let userList = await userManager.find().lean();
 
     res.render('ListUser', {
@@ -70,10 +70,10 @@ app.get('/userManager', async (req, res) => {
 });
 //,upload.single("img")
 app.post('/userManager', async (req, res) => {
-    await mongoose.connect(uri,{
+    await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-      });
+    });
     let userList = await userManager.find().lean();
 
     let name = req.body.fullname;
@@ -107,25 +107,88 @@ app.post('/userManager', async (req, res) => {
             email: email,
             password: pass,
             img: imgBase64,
+            permission: "USER"
         })
 
         await addUser.save();
         res.redirect("/userManager");
-        
-    }else{
-        res.send('<script>alert("Tài khoản đã tồn tại!"); window.location.href = "/userManager";</script>');
+
+    } else {
+        res.send('<script>alert("Email đã tồn tại!"); window.location.href = "/userManager";</script>');
     }
 });
-app.post("/deleteUser/:id",async (req,res)=>{
-    await mongoose.connect(uri,{
+app.post("/deleteUser", async (req, res) => {
+    await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-      });
-    let id = req.params.id;
+    });
+    let id = req.body.id;
     console.log(id);
-    //await userManager.deleteOne({_id:id});
+    let userId = await userManager.findOne({_id:id}).lean();
+    console.log(userId.permission);
+    if (userId.permission === 'ADMIN') {
+        res.send('<script>alert("Không thể xóa Admin !"); window.location.href = "/userManager";</script>');
+    } else {
+        await userManager.deleteOne({ _id: id });
+        res.redirect("/userManager");
+    }
+    
+});
+app.post("/editUser", async (req, res) => {
+    await mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+    let id = req.body.id;
+    let name = req.body.fullname;
+    let email = req.body.email;
+    let pass = req.body.pass;
+    let img = req.files;
 
-    res.redirect("/userManager");
+    let userList = await userManager.find().lean();
+
+    let data = [...userList];
+    let userEdit = await userManager.findOne({ _id: id }).lean();
+
+    let check = true;
+    for (let i = 0; i < data.length; i++) {
+        if (userEdit.email == data[i].email) {
+            continue;
+        }
+
+        if (email == userList[i].email) {
+            check = false;
+            break;
+        }
+    }
+
+    console.log(check);
+    if (check) {
+        let userUpdate = new userManager({
+            _id: id,
+        })
+        let imgUpdate = "";
+
+        if (img == null) {
+            imgUpdate = userEdit.img;
+        } else {
+            let pathImg = "",
+                dataImg = "",
+                file_ext = "";
+
+
+            pathImg = img.img.data;
+            dataImg = pathImg.toString('base64');
+            file_ext = img.img.name.substring(img.img.name.lastIndexOf('.') + 1);
+            imgUpdate = `data:image/${file_ext};base64,${dataImg}`;
+        }
+        console.log(imgUpdate);
+        await userUpdate.updateOne({ name: name, email: email, password: pass, img: imgUpdate, permission: "USER" })
+        res.redirect("/userManager");
+    }
+
+
+
 })
 
 
@@ -164,4 +227,15 @@ app.post('/statistical', (req, res) => {
         layout: 'main'
     });
 });
+
+app.get("/userAPI",async (req,res)=>{
+    await mongoose.connect(uri,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+
+    let api = await userManager.find().lean();
+    console.log(api);
+    res.json(api);
+})
 

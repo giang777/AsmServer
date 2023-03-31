@@ -14,5 +14,8 @@ const Poem = new mongoose.Schema({
         data:Buffer,
         type: String,
     },
+    permission:{
+        type: String,
+    }
 })
 module.exports = mongoose.model('user', Poem);
