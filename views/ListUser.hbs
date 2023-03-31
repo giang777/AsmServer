@@ -32,25 +32,29 @@
         </div>
         <div class="modal-body">
 
-          <form action="/userManager" method="POST" enctype="multipart/form-data" onsubmit="" id="addUser">
+          <form action="/userManager" method="POST" enctype="multipart/form-data"  id="addUser">
             <div class="form-group">
               <label for="usr">Họ và tên</label>
-              <input type="text" class="form-control" id="fullname" name="fullname">
+              <input type="text" class="form-control" id="fullname" name="fullname" required>
             </div>
+            <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
             <div class="form-group">
               <label for="pwd">Email:</label>
-              <input type="text" class="form-control" id="email" name="email">
+              <input type="email" class="form-control" id="email" name="email" required>
             </div>
+             <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
             <div class="form-group">
               <label for="pwd">Mật khẩu:</label>
-              <input type="text" class="form-control" id="pass" name="pass">
+              <input type="password" class="form-control" id="pass" name="pass" required>
             </div>
+             <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
             <div class="form-group">
               <label for="formFile" class="form-label">Ảnh : </label>
-              <input class="form-control" type="file" id="files" name="img" accept="image/*">
+              <input class="form-control" type="file" id="files" name="img" accept="image/*" required>
             </div>
+             <p class="texterr" style="margin-top: 10px;margin-bottom: 10px;"></p>
             <button type="submit" class="btn btn-info btn-lg"
-              style="margin-bottom: 20px;">Thêm tài khoản</button>
+              style="margin-bottom: 20px;" onclick="">Thêm tài khoản</button>
           </form>
 
         </div>
