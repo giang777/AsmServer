@@ -8,6 +8,7 @@ const axios = require('axios');
 const app = express();
 const uri = "mongodb+srv://cucosieu:B8tA6vWuFhVuO60y@cluster0.jnksopi.mongodb.net/SimpleServer?retryWrites=true&w=majority";
 const userManager = require("./public/js/User");
+const productManager = require("./public/js/Product");
 const e = require('express');
 
 app.listen(3000, (err) => {
@@ -124,7 +125,7 @@ app.post("/deleteUser", async (req, res) => {
     });
     let id = req.body.id;
     console.log(id);
-    let userId = await userManager.findOne({_id:id}).lean();
+    let userId = await userManager.findOne({ _id: id }).lean();
     console.log(userId.permission);
     if (userId.permission === 'ADMIN') {
         res.send('<script>alert("Không thể xóa Admin !"); window.location.href = "/userManager";</script>');
@@ -132,7 +133,7 @@ app.post("/deleteUser", async (req, res) => {
         await userManager.deleteOne({ _id: id });
         res.redirect("/userManager");
     }
-    
+
 });
 app.post("/editUser", async (req, res) => {
     await mongoose.connect(uri, {
@@ -176,7 +177,6 @@ app.post("/editUser", async (req, res) => {
                 dataImg = "",
                 file_ext = "";
 
-
             pathImg = img.img.data;
             dataImg = pathImg.toString('base64');
             file_ext = img.img.name.substring(img.img.name.lastIndexOf('.') + 1);
@@ -186,55 +186,127 @@ app.post("/editUser", async (req, res) => {
         await userUpdate.updateOne({ name: name, email: email, password: pass, img: imgUpdate, permission: "USER" })
         res.redirect("/userManager");
     }
-
-
-
 })
 
 
 
-app.get('/productManager', (req, res) => {
+app.get('/productManager', async (req, res) => {
+    await mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+
+    let productList = await productManager.find().lean();
+
     res.render('ProductManager', {
         layout: 'main',
+        data: productList,
     });
 });
-app.post('/productManager', (req, res) => {
+app.post('/productManager', async (req, res) => {
+    await mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+
+    let name = req.body.fullname;
+    let price = req.body.price;
+    let quantity = req.body.quantity;
+    let color = req.body.color;
+    let img = req.files.img;
+
+    let pathImg = "",
+        dataImg = "",
+        file_ext = "",
+        imgBase64 = "";
+
+    pathImg = img.data;
+    dataImg = pathImg.toString('base64');
+    file_ext = img.name.substring(img.name.lastIndexOf('.') + 1);
+    imgBase64 = `data:image/${file_ext};base64,${dataImg}`;
+
+    let addProduct = new productManager({
+        name: name,
+        price: price,
+        quantity: quantity,
+        color: color,
+        img: imgBase64,
+    })
+
+    await addProduct.save();
+
+    let productList = await productManager.find().lean();
+
     res.render('ProductManager', {
         layout: 'main',
+        data: productList,
     });
 });
-
-
-app.get('/order', (req, res) => {
-    res.render('Order', {
-        layout: 'main',
+app.post('/deleteProduct', async (req, res) => {
+    await mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     });
-});
-app.post('/order', (req, res) => {
-    res.render('Order', {
-        layout: 'main',
+
+    let id = req.body.id;
+    await productManager.deleteOne({ _id: id });
+
+    res.redirect("/productManager")
+})
+app.post('/editProduct', async (req, res) => {
+    await mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     });
-});
+
+    let id = req.body.id;
+    let name = req.body.fullname;
+    let price = req.body.price;
+    let quantity = req.body.quantity;
+    let color = req.body.color;
+    let img = req.files;
+    let imgUpdate = "";
+
+    let userEdit = await productManager.findOne({ _id: id }).lean();
+    if (img == null) {
+        imgUpdate = userEdit.img;
+    } else {
+        let pathImg = "",
+            dataImg = "",
+            file_ext = "";
+            
+        pathImg = img.img.data;
+        dataImg = pathImg.toString('base64');
+        file_ext = img.img.name.substring(img.img.name.lastIndexOf('.') + 1);
+        imgUpdate = `data:image/${file_ext};base64,${dataImg}`;
+    };
+    let userUpdate = new productManager({
+        _id:id,
+    });
+    await userUpdate.updateOne({name:name,price:price,quantity:quantity,color:color,img:imgUpdate});
+
+    res.redirect("/productManager")
+})
 
 
-app.get('/statistical', (req, res) => {
-    res.render('Statistical', {
-        layout: 'main',
-    });
-});
-app.post('/statistical', (req, res) => {
-    res.render('Statistical', {
-        layout: 'main'
-    });
-});
 
-app.get("/userAPI",async (req,res)=>{
-    await mongoose.connect(uri,{
+app.get("/userAPI", async (req, res) => {
+    await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
 
     let api = await userManager.find().lean();
+    console.log(api);
+    res.json(api);
+});
+app.get("/productAPI", async (req, res) => {
+    await mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+
+    let api = await productManager.find().lean();
     console.log(api);
     res.json(api);
 })
